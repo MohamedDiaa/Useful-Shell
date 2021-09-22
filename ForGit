@@ -1,0 +1,39 @@
+
+How do I show my global Git configuration?
+
+https://stackoverflow.com/questions/12254076/how-do-i-show-my-global-git-configuration
+ $ git config --list
+
+---
+
+Useful git configs
+
+to add an alias to git use 
+
+ $ git config --global -e
+
+[alias]
+        # State
+        co = checkout
+        st = status
+        br = branch
+        sync = "!f() { git co master && git pull && git rprune && git fetch --tags; }; f"
+        # Stage
+        swift-add = "!f() { git diff --name-only -- '*.swift' | xargs swiftlint autocorrect && git add $1; }; f"
+        # Commit
+        ci = commit
+        patch = commit --amend
+        amen = commit --amend --no-edit
+        # History
+        plog = log --pretty=format:"%ad%x09%C(yellow)%s%Creset%x09(%an)" --no-merges --date=short
+        clog = log --pretty=format:"%C(yellow)%s%Creset" --reverse --no-merges
+        when = reflog show --date=relative
+        latest-tag = "!f() { git for-each-ref --format=\"%(refname:short)\" --sort=-v:refname --count=1 refs/tags/$1; }; f"
+        distance = "!f() { git rev-list $1..${2-HEAD} --count; }; f"
+        delete-tag = "!f() { git tag --delete $1 && git push --delete origin $1; }; f"
+        # Publish
+        yoda = push --force
+        # Clean up
+        rprune = remote prune origin
+        rmignored = rm --cached 'git ls-files -i --exclude-standard'
+        nuke = "!f() { git reset HEAD . && git co . && git clean -df; }; f"
